@@ -1,4 +1,28 @@
 {
-    "port": 3000,
-    "couchdb": "http://172.17.0.2:5984"
+    "db": "odds_db",
+    "port": 2000,
+    "couchdb": "http://172.17.0.2:5984",
+    "default_config": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "title": "Config",
+        "description": "Client configurations",
+        "type": "object",
+        "properties": {
+            "foo": {
+                "type": "string",
+                "default":"bar"
+            },
+            "baz": {
+                "type": "string",
+                "default": "red",
+                "enum": ["red", "amber", "green"]
+            },
+            "qux": {
+                "type": "integer",
+                "default": 2,
+                "enum": [2, 4, 8]
+            },
+            "required": ["foo"]
+        }
+    }
 }

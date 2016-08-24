@@ -1,35 +1,49 @@
 'use strict';
 
-require('./config.js');
+const express = require('express'),
+      logger = require('morgan'),
+      bodyParser = require('body-parser'),
+      events = require('events');
 
-const expressjs = require('express'),
-    bodyParser = require('body-parser');
+const routes = require('./routes/index');
 
-const express = new expressjs(),
-    DB_NAME = 'test_db';
+var app = express();
 
-function Application() {
-    var api = undefined,
-        db = undefined;
-}
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-Application.prototype.init = new Promise(function (resolve, reject) {
+app.use('/', routes);
 
-    express.use(bodyParser.json());
-    express.use(bodyParser.urlencoded({ extended: true }));
-
-    const couchdb = require('nano')(
-        process.env.OVERLAY_DOCUMENT_DATA_STORAGE_COUCHDB_SERVER
-    );
-
-    couchdb.db.create(DB_NAME, function (err) {
-        express.listen(process.env.OVERLAY_DOCUMENT_DATA_STORAGE_PORT);
-
-        Application.api = express;
-        Application.db = couchdb.use(DB_NAME);
-
-        resolve(Application);
-    });
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
-module.exports = new Application();
+// error handlers
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+  });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
+});
+
+module.exports = app;

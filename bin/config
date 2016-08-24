@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const fs = require('fs'),
+    config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+
+if (!config['couchdb']) {
+    console.error('Couchdb address does not set');
+    process.exit(1);
+}
+
+if (!config['default_config']) {
+    console.error('Default config does not set');
+    process.exit(1);
+}
+
+process.env['ODDS_DB'] = config['db'] || 'odds_db';
+process.env['ODDS_PORT'] = normalizePort(config['port'] || '3000');
+process.env['ODDS_COUCHDB_SERVER'] = config['couchdb'];
+process.env['ODDS_DEFAULT_CONFIG'] = JSON.stringify(config['default_config']);
+
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}

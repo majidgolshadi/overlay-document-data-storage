@@ -2,7 +2,9 @@
   "name": "overlay-document-data-storage",
   "version": "0.0.1",
   "description": "Overlay base document json data storage",
-  "main": "index.js",
+  "scripts": {
+    "start": "node ./bin/www"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/majidgolshadi/overlay-document-data-storage.git"
@@ -16,6 +18,7 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "morgan": "^1.7.0",
     "nano": "^6.2.0"
   }
 }
