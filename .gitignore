@@ -1,4 +1,6 @@
 config.json
+schemas/*
+!.gitkeep
 
 # Logs
 logs

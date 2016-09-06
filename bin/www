@@ -9,6 +9,7 @@ require('./config');
 var app = require('../app');
 var debug = require('debug')('odds:server');
 var http = require('http');
+var schema_couch = require('schema-couch');
 const couchdb = require('nano')(process.env.ODDS_COUCHDB_SERVER);
 
 
@@ -30,9 +31,15 @@ var server = http.createServer(app);
  */
 
 couchdb.db.create(process.env.ODDS_DB, function (err) {
-    server.listen(port);
-    server.on('error', onError);
-    server.on('listening', onListening);
+    schema_couch(__dirname + '/../schemas', process.env.ODDS_COUCHDB_SERVER+'/'+process.env.ODDS_DB, function(err) {
+        if (err) {
+            return err;
+        }
+
+        server.listen(port);
+        server.on('error', onError);
+        server.on('listening', onListening);
+    });
 });
 
 /**
